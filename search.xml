@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>Android Studio项目文件说明</title>
+      <link href="/2019/04/03/Android-Studio/"/>
+      <url>/2019/04/03/Android-Studio/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、Android-Studio的项目文件"><a href="#一、Android-Studio的项目文件" class="headerlink" title="一、Android Studio的项目文件"></a>一、Android Studio的项目文件</h2><ol><li>gradle和.idea<blockquote><p>Android Studio 自动生成的一些文件。</p></blockquote></li><li><p>app<br>项目中的代码、资源等内容几乎都是放置在该目录下。</p><ol><li>build<blockquote><p>编译时自动生成的文件。</p></blockquote></li><li>libs<blockquote><p>在项目中用到了第三方jar包，就放在该目录下。</p></blockquote></li><li>androidTest<blockquote><p>用来编写Android Test测试用例的。</p></blockquote></li><li>java<blockquote><p>用来编写java代码的目录。</p></blockquote></li><li>res<blockquote><p>drawable用来存放图片资源，layout用来存放布局资源，values用来存放字符串资源，mipmap存放图标资源。</p></blockquote></li><li>AndroidManifest.xml<blockquote><p>整个Android项目的配置文件，四大组件需要在这个文件中注册。</p></blockquote></li><li>test<blockquote><p>此处用来编写Unit Test测试用例的。</p></blockquote></li><li>.gitgnore<blockquote><p>这个文件用于将app模块内的指定的目录或文件排除在版本控制之外，和外层的.gitgnore文件类似。</p></blockquote></li><li>app.iml<blockquote><p>IntelliJ IDEA项目自动的生成的文件。</p></blockquote></li><li>build.gradle<blockquote><p>app模块的gradle构建脚本，这个文件会指定很多项目构建相关的配置。</p></blockquote></li><li>proguard-rules.pro<blockquote><p>这个文件用于指定项目代码的混淆规则。</p></blockquote></li></ol></li><li><p>build</p><blockquote><p>在编译时自动生成的文件。</p></blockquote></li><li>gradle<blockquote><p>存放gradle wrapper的配置文件。</p></blockquote></li><li>.gitgnore<blockquote><p>这个文件是用来将指定的目录或文件排除在版本控制之外的。</p></blockquote></li><li>build.gradle<blockquote><p>这是项目的全局构建脚本，通常不需要修改。</p></blockquote></li><li>gradle.properties<blockquote><p>这个文件是全局的gradle配置文件，影响项目中所有的gradle编译脚本。</p></blockquote></li><li>gradlew和gradlew.bat<blockquote><p>这两个文件用来在命令行界面中执行gradle命令的。</p></blockquote></li><li>HelloWorld.iml<blockquote><p>IntelliJ IDEA 项目自动生成的，用于标识这是一个IDEA项目。</p></blockquote></li><li>local.properties<blockquote><p>这个文件用于指定本机中Android SDK路径，自动生成的。</p></blockquote></li><li>settings.gradle<blockquote><p>用于指定项目中所有引入的模块。</p></blockquote></li></ol><h2 id="二、重要文件说明"><a href="#二、重要文件说明" class="headerlink" title="二、重要文件说明"></a>二、重要文件说明</h2><h3 id="1、AndroidManifest-xml"><a href="#1、AndroidManifest-xml" class="headerlink" title="1、AndroidManifest.xml"></a>1、AndroidManifest.xml</h3><pre><code class="xml">    &lt;application        android:allowBackup=&quot;true&quot;        android:icon=&quot;@mipmap/ic_launcher&quot;        android:label=&quot;@string/app_name&quot;        android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;        android:supportsRtl=&quot;true&quot;        android:theme=&quot;@style/AppTheme&quot;&gt;        &lt;activity android:name=&quot;.MainActivity&quot;&gt;            &lt;intent-filter&gt;                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;            &lt;/intent-filter&gt;        &lt;/activity&gt;    &lt;/application&gt;</code></pre><p><strong>intent-filter</strong>中的两行代码很重要，表示<strong>MainActivity</strong>是这个项目的主活动。</p><h3 id="2、项目中的build-gradle"><a href="#2、项目中的build-gradle" class="headerlink" title="2、项目中的build.gradle"></a>2、项目中的build.gradle</h3><blockquote><p>通常不需要修改。</p></blockquote><pre><code class="groovy">buildscript {    repositories {        google()        jcenter()  // 代码托管仓库    }    dependencies {        classpath &#39;com.android.tools.build:gradle:3.2.1&#39;  // 声明了Gradle插件    }}allprojects {    repositories {        google()        jcenter()    }}task clean(type: Delete) {    delete rootProject.buildDir}</code></pre><h3 id="3、app中的gradle-build"><a href="#3、app中的gradle-build" class="headerlink" title="3、app中的gradle.build"></a>3、app中的gradle.build</h3><pre><code class="groovy">apply plugin: &#39;com.android.application&#39;  // 表示这是一个应用程序模块// com.android.library 表示这是一个库模块android {    compileSdkVersion 28  // 指定项目的编译版本    defaultConfig {        applicationId &quot;com.example.zhang.application&quot;  // 指定项目的包名        minSdkVersion 15     // 项目最低兼容的Android系统版本        targetSdkVersion 28  // 目标Android系统版本        versionCode 1        // 项目的版本号        versionName &quot;1.0&quot;    // 项目的版本名        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;    }    buildTypes {        release {            minifyEnabled false  // 是否对项目的代码进行混淆            proguardFiles getDefaultProguardFile(&#39;proguard-android.txt&#39;), &#39;proguardrules.pro&#39;   // 混淆使用的规则文件        }    }}dependencies {    // implementation用于引入一些库，之前为compile    implementation fileTree(dir: &#39;libs&#39;, include: [&#39;*.jar&#39;])    implementation &#39;com.android.support:appcompat-v7:28.0.0&#39;    implementation &#39;com.android.support.constraint:constraint-layout:1.1.3&#39;    testImplementation &#39;junit:junit:4.12&#39;    androidTestImplementation &#39;com.android.support.test:runner:1.0.2&#39;    androidTestImplementation &#39;com.android.support.test.espresso:espresso-core:3.0.2&#39;}</code></pre><h2 id="三、Android的Log工具"><a href="#三、Android的Log工具" class="headerlink" title="三、Android的Log工具"></a>三、Android的Log工具</h2><ul><li>Log.v()，对应级别为verbose。</li><li>Log.d()，对应级别为debug。</li><li>Log.i()，对应级别为info。</li><li>Log.w()，对应级别为warn。</li><li>Log.e()，对应级别为error。<blockquote><p>Log.d()传入两个参数：tag，msg；tag一般为当前的类名，msg为想打印的内容。</p></blockquote></li></ul><h2 id="参考：《第一行代码》（第二版）"><a href="#参考：《第一行代码》（第二版）" class="headerlink" title="参考：《第一行代码》（第二版）"></a>参考：《第一行代码》（第二版）</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Android Studio </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
