@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="en"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="用于记录在学习过程的中的一些笔记"><title>Android资源 | Zhangwww's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script></head><link rel="stylesheet" type="text/css" href="/css/customize.css"><link rel="stylesheet" type="text/css" href="/plugins/prettify/doxy.css"><script type="text/javascript" src="/js/ready.js" async></script><body><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">Zhangwww's Blog</a></h1></div><p class="m-desc">心之所向！</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li class="m-sch"><form class="form" id="j-formsch" action="/search" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">Android资源</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2019/04/04/Android资源/">2019-04-04</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/Android/">Android</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><h2 id="资源种类"><a href="#资源种类" class="headerlink" title="资源种类"></a>资源种类</h2><ul>
+<li>values目录<ul>
+<li>字符串资源（strings.xml）</li>
+<li>颜色资源 （colors.xml）</li>
+<li>尺寸资源 （dimens.xml）</li>
+<li>数组资源 （arrays.xml）</li>
+<li>样式资源和主题（styles.xml）</li>
+</ul>
+</li>
+<li>Drawable资源（drawable目录）</li>
+<li>菜单资源（menu目录）</li>
+<li>XML资源（xml目录）</li>
+<li>assets资源（assets目录）</li>
+<li>启动器图标资源（mipmap目录）</li>
+</ul>
+<h2 id="一、values目录"><a href="#一、values目录" class="headerlink" title="一、values目录"></a>一、values目录</h2><h3 id="1、strings-xml"><a href="#1、strings-xml" class="headerlink" title="1、strings.xml"></a>1、strings.xml</h3><ol>
+<li>文件内容<pre><code class="xml">&lt;resources&gt;
+ &lt;string name=&quot;app_name&quot;&gt;App Name&lt;/string&gt;
+&lt;/resources&gt;
+</code></pre>
+</li>
+<li>基本使用<blockquote>
+<p>在xml中引用： <code>@string/app_name</code></p>
+<p>在活动中使用：<code>String appName = getResources().getString(R.string.app_name);</code></p>
+</blockquote>
+</li>
+<li>国际化<blockquote>
+<p>1.右键点击res目录 -&gt; New -&gt; Android Resource Directiory</p>
+<p>2.在弹出框中下方左侧列表中选择Locale，然后点击中间的“右移按钮”（&gt;&gt;）</p>
+<p>3.在Language列表和Specific Region Only列表选择对应的选项，最后点击OK按钮，就会在res目录下生成对应的values目录</p>
+<p>参考: <a href="https://blog.csdn.net/heyangweng/article/details/81880553" target="_blank" rel="noopener">Android Studio创建对应国家语言values</a></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="2、colors-xml"><a href="#2、colors-xml" class="headerlink" title="2、colors.xml"></a>2、colors.xml</h3><ol>
+<li>文件内容<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+ &lt;color name=&quot;colorPrimary&quot;&gt;#008577&lt;/color&gt;
+ &lt;color name=&quot;colorPrimaryDark&quot;&gt;#00574B&lt;/color&gt;
+ &lt;color name=&quot;colorAccent&quot;&gt;#D81B60&lt;/color&gt;
+&lt;/resources&gt;
+</code></pre>
+</li>
+<li>基本使用<blockquote>
+<p>在xml文件中使用： <code>@color/colorPrimary</code></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="3、demens-xml"><a href="#3、demens-xml" class="headerlink" title="3、demens.xml"></a>3、demens.xml</h3><ol>
+<li>文件内容<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+&lt;dimen name=&quot;activity_margin&quot;&gt;16dp&lt;/dimen&gt;
+&lt;/resources&gt;
+</code></pre>
+</li>
+<li>基本使用<blockquote>
+<p>在xml文件中使用： <code>@dimen/activity_margin</code></p>
+</blockquote>
+</li>
+<li>适配屏幕<blockquote>
+<p>参考<a href="https://www.jianshu.com/p/1302ad5a4b04" target="_blank" rel="noopener">一种非常好用的Android屏幕适配</a></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="4、arrays-xml"><a href="#4、arrays-xml" class="headerlink" title="4、arrays.xml"></a>4、arrays.xml</h3><ol>
+<li>文件内容<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+ &lt;string-array name=&quot;string_array&quot;&gt;
+     &lt;item&gt;1&lt;/item&gt;
+     &lt;item&gt;2&lt;/item&gt;
+     &lt;item&gt;3&lt;/item&gt;
+ &lt;/string-array&gt;
+&lt;/resources&gt;
+</code></pre>
+</li>
+<li>基本使用<blockquote>
+<p>在ListView中使用：android:entries=”@array/string_array”</p>
+<p>在活动中使用：<code>String[] array = getResources().getIntArray(R.array.string_array);</code></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="4、styles-xml"><a href="#4、styles-xml" class="headerlink" title="4、styles.xml"></a>4、styles.xml</h3><ol>
+<li><p>文件内容</p>
+<pre><code class="xml">&lt;resources&gt;
+ &lt;!-- Base application theme. --&gt;
+ &lt;style name=&quot;AppTheme&quot; parent=&quot;Theme.AppCompat.Light.DarkActionBar&quot;&gt;
+     &lt;!-- Customize your theme here. --&gt;
+     &lt;item name=&quot;colorPrimary&quot;&gt;@color/colorPrimary&lt;/item&gt;
+     &lt;item name=&quot;colorPrimaryDark&quot;&gt;@color/colorPrimaryDark&lt;/item&gt;
+     &lt;item name=&quot;colorAccent&quot;&gt;@color/colorAccent&lt;/item&gt;
+ &lt;/style&gt;
+
+ &lt;style name=&quot;TextStyle&quot;&gt;
+     &lt;item name=&quot;android:layout_width&quot;&gt;60dp&lt;/item&gt;
+     &lt;item name=&quot;android:layout_height&quot;&gt;30dp&lt;/item&gt;
+     &lt;item name=&quot;android:textColor&quot;&gt;#000000&lt;/item&gt;
+ &lt;/style&gt;
+&lt;/resources&gt;
+</code></pre>
+</li>
+<li>基本使用<blockquote>
+<p>主题是在活动中使用，即在Manifest.xml文件中配置（theme标签）<br>样式是在控件中使用，在控件的style标签中引用（@style/TextStyle）</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="二、Drawable资源"><a href="#二、Drawable资源" class="headerlink" title="二、Drawable资源"></a>二、Drawable资源</h2><ol>
+<li>文件类型<blockquote>
+<p>xml: 可用来编写控件的背景，比如给EditText加上边框（shape）</p>
+<p>png: 图片类型，src/background 标签中引用，不同分辨率的图片应放在不同的drawable目录下</p>
+</blockquote>
+</li>
+<li>基本使用<blockquote>
+<p><code>drawable/filename</code></p>
+</blockquote>
+</li>
+<li>shape<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+ android:shape=&quot;rectangle&quot;&gt;
+ &lt;padding
+     android:bottom=&quot;7dp&quot;
+     android:left=&quot;7dp&quot;
+     android:right=&quot;7dp&quot;
+     android:top=&quot;7dp&quot; /&gt;
+ &lt;stroke
+     android:width=&quot;5px&quot;
+     android:color=&quot;#000&quot; /&gt;
+ &lt;solid android:color=&quot;#FFFFFF&quot;/&gt;
+&lt;/shape&gt;
+</code></pre>
+<blockquote>
+<p>参考: <a href="https://www.cnblogs.com/popfisher/p/6238119.html" target="_blank" rel="noopener">Android XML shape 标签使用详解</a></p>
+</blockquote>
+</li>
+</ol>
+<h2 id="三、菜单资源"><a href="#三、菜单资源" class="headerlink" title="三、菜单资源"></a>三、菜单资源</h2><ol>
+<li>文件内容<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+&lt;item
+ android:id=&quot;@+id/menu_settings&quot;
+ android:title=&quot;设置&quot;/&gt;
+&lt;/menu&gt;
+</code></pre>
+2.基本使用<blockquote>
+<p>在活动中使用：</p>
+<p>重写onCreateOptionsMenu()方法，用于在活动中显示菜单</p>
+<pre><code class="java">@Override
+public boolean onCreateOptionsMenu(Menu menu) {
+ getMenuInflater().inflate(R.menu.main, menu);
+ return true;
+}
+</code></pre>
+<p>重写onOptionsItemSelected()方法，用于处理点击菜单项的事件</p>
+<pre><code class="java">@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+ switch (item.getItemId()) {
+     case R.id.menu_settings:
+         // 具体的响应事件
+         break；
+ }
+ return super.onOptionsItemSelected(item);
+}
+</code></pre>
+</blockquote>
+</li>
+</ol>
+<h2 id="四、XML资源"><a href="#四、XML资源" class="headerlink" title="四、XML资源"></a>四、XML资源</h2><blockquote>
+<p>一般作为配置文件，如果需要读取相应的数据，需要使用XML解析。</p>
+</blockquote>
+<h2 id="五、assets资源"><a href="#五、assets资源" class="headerlink" title="五、assets资源"></a>五、assets资源</h2><ol>
+<li>assets目录下的资源不会被编译</li>
+<li>在活动中使用：<pre><code class="java"> InputStream is = getAssets().open(&quot;filename&quot;);
+ byte[] bytes = new byte[is.available()];  // 当文件过大时应使用循环来读取数据
+</code></pre>
+</li>
+</ol>
+<h2 id="六、mipmap资源"><a href="#六、mipmap资源" class="headerlink" title="六、mipmap资源"></a>六、mipmap资源</h2><blockquote>
+<p>mipmap目录的图标会忽略屏幕密度，回去匹配大一点的，然后系统自动对图片进行缩放，从而优化显示和节省资源。官方建议如下类型的图片资源放在mipmap目录：</p>
+<ul>
+<li>launcher icons</li>
+<li>action bar and tab icons</li>
+<li>Notification ico</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>密度</th>
+<th>建议尺寸</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mipmap-mdpi</td>
+<td>48 * 48</td>
+</tr>
+<tr>
+<td>mipmap-hdpi</td>
+<td>72 * 72</td>
+</tr>
+<tr>
+<td>mipmap-xhdpi</td>
+<td>96 * 96</td>
+</tr>
+<tr>
+<td>mipmap-xxhdpi</td>
+<td>144 * 144</td>
+</tr>
+<tr>
+<td>mipmap-xxxhdpi</td>
+<td>192 * 192</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>参考：<a href="https://blog.csdn.net/wk_beicai/article/details/78471187" target="_blank" rel="noopener">drawable与mipmap的区别</a></p>
+<p>参考：<a href="https://blog.csdn.net/lvwenbo0107/article/details/51655161" target="_blank" rel="noopener">mipmap尺寸</a></p>
+</blockquote>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">Zhangwww</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2019/04/04/Android资源/">https://github.com/Zhangw1998/2019/04/04/Android资源/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://github.com/Zhangw1998">Zhangwww的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/Resources/">Resources</a></span></div></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2019/04/03/活动（Activity_2）/">活动（Activity_2） &gt;</a></div></section><footer><p>Copyright © 2016 - 2019 <a href="/." rel="nofollow">Zhangwww's Blog</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/plugins/prettify/prettify.js"></script><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"></body></html>
