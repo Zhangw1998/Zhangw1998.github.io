@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="用于记录在学习过程的中的一些笔记"><title>Notification | Zhangwww's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script></head><link rel="stylesheet" type="text/css" href="/css/customize.css"><link rel="stylesheet" type="text/css" href="/plugins/prettify/doxy.css"><script type="text/javascript" src="/js/ready.js" async></script><body><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">Zhangwww's Blog</a></h1></div><p class="m-desc">心之所向！</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li class="m-sch"><form class="form" id="j-formsch" action="/search" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">Notification</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2019/07/25/Notification/">2019-07-25</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/Android/">Android</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><h1 id="Notification"><a href="#Notification" class="headerlink" title="Notification"></a>Notification</h1><h2 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1. 基本使用"></a>1. 基本使用</h2><h3 id="1-1-导入包"><a href="#1-1-导入包" class="headerlink" title="1.1 导入包"></a>1.1 导入包</h3><pre><code class="gradle">dependencies {
+    implementation &quot;com.android.support:support-compat:28.0.0&quot;
+}
+</code></pre>
+<h3 id="1-2-显示通知"><a href="#1-2-显示通知" class="headerlink" title="1.2 显示通知"></a>1.2 显示通知</h3><pre><code class="java">String CHANNEL_ID = &quot;ID&quot;;
+String textTile = &quot;Title&quot;;
+String textContent = &quot;Content&quot;;
+NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+        .setSmallIcon(R.drawable.notification_icon)        // 显示通知时的图标
+        .setContentTitle(textTitle)                                                // 通知的标题
+        .setContentText(textContent)                                   // 通知的内容
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT);    // 通知的优先级
+// 创建通知
+Notification notification = builder.build();
+NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+//NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+// 创建通知渠道(版本大于或等于Android  O)
+createNotificationChannel()
+// 显示通知
+notificationManager.notify(1, notification);
+
+// 如果Android版本高于或等于O，需要创建通知渠道，主要代码如下图所示，并且ChannelID要相同
+private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) {
+            String channelName = &quot;Channel_Name&quot;;
+            String channelDescription = &quot;Channel_Description&quot;;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            String channelID = &quot;ID&quot;;
+            NotificationChannel channel = new NotificationChannel(channelID, channelName, importance);
+            channel.setDescription(channelDescription);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+</code></pre>
+<h3 id="1-3-PendingIntent的使用"><a href="#1-3-PendingIntent的使用" class="headerlink" title="1.3 PendingIntent的使用"></a>1.3 PendingIntent的使用</h3><pre><code class="java">// 创建Intent
+Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+// 创建PendingIntent
+Context context = getApplicationContext();
+int requestCode = 0;
+int flags = 0;
+PendingIntent pendingIntent = PendingIntent.getActivity(context, requestCode, intent, flags);
+// 在通知中使用
+String CHANNEL_ID = &quot;ID&quot;;
+String textTitle = &quot;Title&quot;;
+String textContent = &quot;Content&quot;;
+NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+.setAutoCancel(true)    // 点击后自动取消
+.setContentIntent(pendingIntent)    // 设置PendingIntent
+.setSmallIcon(R.drawable.notification_icon)     // 显示通知时的图标
+.setContentTitle(textTitle)                                          // 通知的标题
+.setContentText(textContent)                                 // 通知的内容
+.setPriority(NotificationCompat.PRIORITY_DEFAULT);    // 通知的优先级
+Notification notification = builder.build();
+NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+createNotificationChannel();
+notificationManager.notify(1, notification);
+</code></pre>
+<ul>
+<li><p>getActivity(Context context, int requestCode, Intent intent, int flags)</p>
+</li>
+<li><p>getBroadcast(Context context, int requestCode, Intent intent, int flags)</p>
+</li>
+<li><p>getService(Context context, int requestCode, Intent intent, int flags)</p>
+</li>
+</ul>
+<blockquote>
+<p>效果和startActivity、startBroadcast、startService类似<br>PendingIntent中的FLAG：<br>FLAG_ONE_SHOT：表示这个PendingIntent只能使用一次<br>FLAG_NO_CREATE：如果描述的PendingIntent不存在，就直接返回null而不是创建<br>FLAG_CANCEL_CURRENT：如果描述的PendingIntent已存在，就在产生新的之前取消当前的<br>FLAG_UPDATE_CURRENT：如果描述的PendingIntent已存在，就保留它，但extras中的信息会替换成新的。<br>FLAG_IMMUTABLE：表示所创建的PendingIntent应该是可变的。</p>
+</blockquote>
+<h3 id="1-4-取消通知"><a href="#1-4-取消通知" class="headerlink" title="1.4 取消通知"></a>1.4 取消通知</h3><pre><code class="java">// 如果设置了PendingIntent，在创建通知的时候调用setAutoCancel()方法
+
+// 通过NotificationManager的cancel或cancelAll关闭通知
+NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+// 调用notify时传入的id
+notificationManager.cancel(id);
+// 取消所用通知
+notificationManager.cancelAll();
+</code></pre>
+<h3 id="1-5-更新通知"><a href="#1-5-更新通知" class="headerlink" title="1.5 更新通知"></a>1.5 更新通知</h3><pre><code class="java">// 调用notify更新，需要设置相同的 id
+NotificationManagerCompat.notify()
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">setWhen</td>
+<td>设置推送时间</td>
+</tr>
+<tr>
+<td style="text-align:left">setShowWhen</td>
+<td>设置是否显示推送时间</td>
+</tr>
+<tr>
+<td style="text-align:left">setUsesChronometer</td>
+<td>设置是否显示计数器</td>
+</tr>
+<tr>
+<td style="text-align:left">setSmallIcon</td>
+<td>设置通知栏的小图标</td>
+</tr>
+<tr>
+<td style="text-align:left">setTicker</td>
+<td>设置通知栏的提示文本</td>
+</tr>
+<tr>
+<td style="text-align:left">setLargeIcon</td>
+<td>设置通知栏中的大图标</td>
+</tr>
+<tr>
+<td style="text-align:left">setContentTitle</td>
+<td>设置通知栏的标题文本</td>
+</tr>
+<tr>
+<td style="text-align:left">setContentText</td>
+<td>设置通知栏的内容文本</td>
+</tr>
+<tr>
+<td style="text-align:left">setSubText</td>
+<td>设置通知栏的附加文本说明</td>
+</tr>
+<tr>
+<td style="text-align:left">setProgress</td>
+<td>设置进度条与当前进度</td>
+</tr>
+<tr>
+<td style="text-align:left">setNumber</td>
+<td>设置通知栏右下方的数字</td>
+</tr>
+<tr>
+<td style="text-align:left">setContentInfo</td>
+<td>设置通知栏右下方的文本</td>
+</tr>
+<tr>
+<td style="text-align:left">setContentIntent</td>
+<td>设置内容的延迟意图PendingIntent，点击时触发</td>
+</tr>
+<tr>
+<td style="text-align:left">setDeleteIntent</td>
+<td>设置删除的延迟意图PendingIntent，滑掉该通知时触发</td>
+</tr>
+<tr>
+<td style="text-align:left">setAutoCancel</td>
+<td>设置是否自动清除</td>
+</tr>
+<tr>
+<td style="text-align:left">setContent</td>
+<td>设置定制的通知栏视图RemoteViews</td>
+</tr>
+</tbody>
+</table>
+<p>注意：</p>
+<ol>
+<li>setSmallIcon必须调用，否则不会显示通知消息</li>
+<li>setWhen与setUsesChronomter同时只能调用一个</li>
+<li>setSubText与setProgress同时只能调用一个</li>
+<li>setNumber与setContentInfo同时只能调用一个</li>
+</ol>
+<h2 id="2-进阶使用"><a href="#2-进阶使用" class="headerlink" title="2. 进阶使用"></a>2. 进阶使用</h2><h3 id="2-1-setStyle的使用"><a href="#2-1-setStyle的使用" class="headerlink" title="2.1 setStyle的使用"></a>2.1 setStyle的使用</h3><pre><code class="java">// 当内容文本过长时通知栏显示不全，需要使用BigTextStyle
+String contentText = &quot;Hello world&quot;;
+
+...
+.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
+...
+
+
+// 为通知添加一张图片
+Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.big_image));
+...
+.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap)
+...
+
+</code></pre>
+<h3 id="2-2-添加按钮"><a href="#2-2-添加按钮" class="headerlink" title="2.2 添加按钮"></a>2.2 添加按钮</h3><pre><code class="java">...
+.addAction(int icon, String title, PindingIntent pi)
+...
+</code></pre>
+<h3 id="2-3-RemoteViews"><a href="#2-3-RemoteViews" class="headerlink" title="2.3 RemoteViews"></a>2.3 RemoteViews</h3><blockquote>
+<ol>
+<li>RemoteViews 主要用于通知栏部件和桌面部件</li>
+<li>RemoteViews只支持FrameLayout、LinearLayout、RelativeLayout、GridLayout、AnalogClock、Button、Chronometer、ImageButton、ImageView、ProgressBar、TextView、ViewFlipper、ListView、GridView、StackView、AdapterViewFlipper、ViewStub。</li>
+<li>RemoteViews不可直接获取和设置控件信息，只能通过set方法修改控件信息</li>
+</ol>
+</blockquote>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;100dp&quot; &gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/imageView&quot;
+        android:layout_width=&quot;100dp&quot;
+        android:layout_height=&quot;100dp&quot;
+        android:layout_marginStart=&quot;8dp&quot;
+        android:scaleType=&quot;fitCenter&quot;
+        android:src=&quot;@drawable/big_image&quot;
+        android:layout_alignParentStart=&quot;true&quot;
+        android:layout_alignParentTop=&quot;true&quot;
+        android:layout_alignParentBottom=&quot;true&quot;/&gt;
+
+    &lt;ProgressBar
+        android:id=&quot;@+id/progressBar&quot;
+        style=&quot;?android:attr/progressBarStyleHorizontal&quot;
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;30dp&quot;
+        android:background=&quot;@color/colorPrimary&quot;
+        android:layout_toEndOf=&quot;@id/imageView&quot;
+        android:layout_alignParentEnd=&quot;true&quot;
+        android:layout_alignParentTop=&quot;true&quot;/&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/textView&quot;
+        android:layout_width=&quot;0dp&quot;
+        android:layout_height=&quot;30dp&quot;
+        android:background=&quot;@color/colorAccent&quot;W
+        android:layout_toEndOf=&quot;@id/imageView&quot;
+        android:layout_alignBottom=&quot;@id/progressBar&quot;
+        android:layout_alignParentEnd=&quot;true&quot;
+        android:layout_alignParentBottom=&quot;true&quot;/&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre>
+<pre><code class="java">Intent intent = new Intent(context, ThirdActivity.class);
+PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.remote_view);
+remoteViews.setTextViewText(R.id.textView, &quot;textView&quot;);
+remoteViews.setProgressBar(R.id.progressBar, 100, 50, true);
+remoteViews.setOnClickPendingIntent(R.id.imageView, pendingIntent);
+
+String CHANNEL_ID = &quot;ID&quot;;
+NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setTicker(&quot;Hello&quot;)
+                    .setContent(remoteViews)
+                    .setSmallIcon(R.drawable.notification_icon);
+Notification notification = builder.build();
+NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+createNotificationChannel();
+notificationManager.notify(1, notification);
+</code></pre>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://developer.android.google.cn/training/notify-user/build-notification#java" target="_blank" rel="noopener">Notification</a></li>
+<li><a href="https://www.jianshu.com/p/296701a842de" target="_blank" rel="noopener">理解RemoteViews</a></li>
+</ul>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">Zhangwww</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2019/07/25/Notification/">https://github.com/Zhangw1998/2019/07/25/Notification/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://github.com/Zhangw1998">Zhangwww的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/Notification/">Notification</a></span></div></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2019/07/24/Service/">Service &gt;</a></div></section><footer><p>Copyright © 2016 - 2019 <a href="/." rel="nofollow">Zhangwww's Blog</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/plugins/prettify/prettify.js"></script><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"></body></html>
