@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="en"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="用于记录在学习过程的中的一些笔记"><title>Broadcast | Zhangwww's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script></head><link rel="stylesheet" type="text/css" href="/css/customize.css"><link rel="stylesheet" type="text/css" href="/plugins/prettify/doxy.css"><script type="text/javascript" src="/js/ready.js" async></script><body><div class="mobile-head" id="mobile-head"><div class="navbar-icon"><span></span><span></span><span></span></div><div class="navbar-title"><a href="/">LITREILY</a></div><div class="navbar-search"><!--= show a circle here--></div></div><div class="h-wrapper" id="menu"><nav class="h-head box"><div class="m-hdimg"><a class="hdimg img" href="/"><img class="nofancybox" src="/img/profile.jpg" width="128" height="128"></a><h1 class="ttl"><a href="/">Zhangwww's Blog</a></h1></div><p class="m-desc">心之所向！</p><div class="m-nav"><ul><li><span class="dot">●</span><a href="/archives/">归档</a></li><li><span class="dot">●</span><a href="/categories/">分类</a></li><li><span class="dot">●</span><a href="/tags/">标签</a></li><li><span class="dot">●</span><a href="/about/">关于</a></li><li class="m-sch"><form class="form" id="j-formsch" action="/search" method="get"><input class="txt" type="text" id="local-search-input" name="q" value="搜索" onfocus="if(this.value=='搜索'){this.value='';}" onblur="if(this.value==''){this.value='搜索';}"></form></li></ul><div id="local-search-result"></div></div></nav></div><div id="back2Top"><a class="fa fa-arrow-up" title="Back to top" href="#"></a></div><div class="box" id="container"><div class="l-wrapper"><div class="l-content box"><div class="l-post l-post-art"><article class="p-art"><div class="p-header box"><h1 class="p-title">Broadcast</h1><div class="p-info"><span class="p-date"><i class="fa fa-calendar"></i><a href="/2019/07/26/Broadcast/">2019-07-26</a></span><span class="p-category"><i class="fa fa-folder"></i><a href="/categories/Android/">Android</a></span><span class="p-view" id="busuanzi_container_page_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_page_pv"></span></span></div></div><div class="p-content"><h1 id="Broadcast"><a href="#Broadcast" class="headerlink" title="Broadcast"></a>Broadcast</h1><h2 id="1-接收系统广播"><a href="#1-接收系统广播" class="headerlink" title="1. 接收系统广播"></a>1. 接收系统广播</h2><blockquote>
+<p> 广播机制</p>
+<ul>
+<li>标准广播：完全异步的广播，在广播发出后，所有的广播接收器几乎会在同一时刻接收到这条广播消息。</li>
+<li><p>有序广播：是一种同步执行的广播，同一时刻只有一个广播接收器能够接收到这条消息。</p>
+<p>主要用于组件之间的通信</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="1-1-基本使用"><a href="#1-1-基本使用" class="headerlink" title="1.1 基本使用"></a>1.1 基本使用</h3><ol>
+<li>使用<code>IntentFilter</code>添加相应的Action</li>
+<li>使用<code>registerReceiver()</code>方法进行注册</li>
+<li>使用<code>unregisterReceiver()</code>方法进行注销</li>
+</ol>
+<pre><code class="java">public class MainActivity extends AppCompatActivity {
+
+    private NetworkChangeReceiver networkChangeReceiver;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        // 使用IntentFilter,并向其中添加Action
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(&quot;android.net.conn.CONNECTIVITY_CHANGE&quot;);
+        // 创建BroadcastReceiver子对象，并进行注册
+        networkChangeReceiver = new NetworkChangeReceiver();
+        registerReceiver(networkChangeReceiver, intentFilter);
+    }
+
+    // 在onDestroy()方法中需要为监听的广播取消注册
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(networkChangeReceiver);
+    }
+
+    // 新建类继承Broadcast，并重写方法onRceive()
+    class NetworkChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if(networkInfo != null &amp;&amp; networkInfo.isConnected()) {
+                Toast.makeText(context, &quot;network is connected!&quot;, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context,&quot;network is not connected!&quot;, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+</code></pre>
+<blockquote>
+<p> 与广播有关的三个方法<br> sendBroadcast : 用于发送广播<br> registerReceiver : 注册接收器，一般在onStart或onResume中使用<br> unregisterReceiver : 注销广播接收器，一般在onStop或onPause中使用</p>
+</blockquote>
+<h3 id="1-2-静态广播"><a href="#1-2-静态广播" class="headerlink" title="1.2 静态广播"></a>1.2 静态广播</h3><blockquote>
+<p>静态广播需要在AndroidManifest.xml中注册<br>在Android 7.0及更高版本，在清单中声明接收器不起作用</p>
+</blockquote>
+<ol>
+<li><p>新建一个广播接收器<code>MyReceiver</code>，继承自<code>BroadcastReceiver</code>，重写<code>onReceive()</code>方法。</p>
+<ol start="2">
+<li>静态广播接收器在AndroidManifest.xml文件中注册后才能使用。</li>
+</ol>
+<p>注：在AndroidManifest.xml文件中注册如下所示，其中<strong>enabled</strong>属性表示是否启用这个广播接收器，<strong>exported</strong>属性表示是否允许这个广播接收本程序以外的广播。在<intent-filter>中写需要监听的广播。一般的，可能需要一些权限，在<application>标签之前添加<uses-permission>标签。（广播接收器中不允许开启线程）</uses-permission></application></intent-filter></p>
+</li>
+</ol>
+<pre><code class="xml">    &lt;receiver
+        android:name=&quot;.MyReceiver&quot;
+        android:enabled=&quot;true&quot;
+        android:exported=&quot;true&quot;&gt;
+        &lt;intent-filter&gt;
+            &lt;action android:name=&quot;android.intent.action.BOOT_COMPLETED&quot; /&gt;
+        &lt;/intent-filter&gt;
+    &lt;/receiver&gt;
+</code></pre>
+<pre><code class="java">
+public class MyReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        // 在此处编写逻辑
+    }
+}
+
+</code></pre>
+<h2 id="2-发送自定义广播"><a href="#2-发送自定义广播" class="headerlink" title="2. 发送自定义广播"></a>2. 发送自定义广播</h2><ul>
+<li>发送标准广播：</li>
+</ul>
+<ol>
+<li>新建一个广播接收器来准备接收该广播</li>
+<li>在AndroidManifest.xml文件中对广播接收器进行修改<pre><code class="xml">&lt;receiver
+     android:name=&quot;.MyBroadcastReceiver&quot;
+     android:enabled=&quot;true&quot;
+     android:exported=&quot;true&quot;&gt;
+     &lt;intent-filter&gt;
+         &lt;!--表示接收的广播--&gt;
+         &lt;action android:name=&quot;My_BROADCAST&quot;/&gt;
+     &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+</code></pre>
+</li>
+<li>通过Intent发送广播<pre><code>Intent intent = new Intent(&quot;My_BROADCAST&quot;);
+sendBroadcast(intent);
+</code></pre>注：在Android8.0中，对静态广播做了一些限制，所以通过以上方法运行在Android8.0中不会接收到广播，需要通过以下方式发送自定义广播。（建议使用动态注册的方式接收广播）<pre><code>Intent intent = new Intent(&quot;My_BROADCAST&quot;);
+/**CompoentName中的参数
+*pram1:自定义广播（接收器）的包名
+*pram2:自定义广播（接收器）的路径
+*/
+intent.setComponent(new ComponentName(&quot;com.example.broadcasttest&quot;,
+                                     &quot;com.example.broadcasttest.MyBroadcast&quot;));
+sendBroadcast(intent);
+</code></pre></li>
+</ol>
+<ul>
+<li>发送有序广播：<br>  只需要将方法修改为<code>sendOrderedBroadcast(intent,null)</code>即可。第一个参数为Intent，第二个参数为与权限有关的字符串。<br>  在<receiver>中可以设置优先级，通过<intent-filter android:priority="数值">来设置。通过<code>abortBroadcast()</code>方法来截断广播。</intent-filter></receiver></li>
+</ul>
+<h2 id="3-使用本地广播"><a href="#3-使用本地广播" class="headerlink" title="3. 使用本地广播"></a>3. 使用本地广播</h2><blockquote>
+<p>为了能够简单的地解决广播安全性问题</p>
+<ol>
+<li>发送广播被其他应用程序截获<ol start="2">
+<li>不断地接收到其他垃圾广播<br><code>`</code><br>// 在活动中使用，this表示当前活动实例<br>/<em>发送广播</em>/<br>LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);<br>Intent intent = new Intent(“自定义广播”);<br>localBroadcastManager.sendBroadcast(intent);</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+<p>/<em>接收广播</em>/<br>IntentFilter intentFilter = new IntentFilter();<br>intentFilter.addAction(“接收的广播”);<br>MyReceiver receiver = new MyReceiver();<br>localBroadcastManager.registerReceiver(receiver,intentFilter);</p>
+<p>// 在活动被销毁之前需要注销广播接收器，即在onDestroy()方法中写以下内容<br>localBroadcastManager.unregisterReceiver(receiver);<br><code>`</code></p>
+</div><div class="p-copyright"><blockquote><div class="p-copyright-author"><span class="p-copyright-key">本文作者：</span><span class="p-copytight-value"><a href="mailto:litreily@163.com">Zhangwww</a></span></div><div class="p-copyright-link"><span class="p-copyright-key">本文链接：</span><span class="p-copytight-value"><a href="/2019/07/26/Broadcast/">https://github.com/Zhangw1998/2019/07/26/Broadcast/</a></span></div><div class="p-copyright-note"><span class="p-copyright-key">版权声明：</span><span class="p-copytight-value">本博客所有文章除特殊声明外，均采用<a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/"> CC BY-NC 4.0 </a>许可协议。转载请注明出处 <a href="https://github.com/Zhangw1998">Zhangwww的博客</a>！</span></div></blockquote></div></article><div class="p-info box"><span class="p-tags"><i class="fa fa-tag"></i><a href="/tags/Broadcast/">Broadcast</a></span></div></div><section class="p-ext"><div class="l-pager l-pager-dtl box"><a class="next" href="/2019/07/25/Notification/">Notification &gt;</a></div></section><footer><p>Copyright © 2016 - 2019 <a href="/." rel="nofollow">Zhangwww's Blog</a> | <strong><a rel="nofollow" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></strong><br><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span></span> <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span></span> | Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a>Theme with<a rel="nofollow" target="_blank" href="https://github.com/litreily/snark-hexo"> snark.</a></p></footer></div></div></div><script type="text/javascript" src="/plugins/prettify/prettify.js"></script><script type="text/javascript" src="/js/search.js"></script><script type="text/javascript" src="/js/top.js"></script><script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+    search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.1" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"></body></html>
