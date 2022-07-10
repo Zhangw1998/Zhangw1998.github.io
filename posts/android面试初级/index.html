@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com https://cdn.jsdelivr.net/; prefetch-src 'self'; connect-src 'self' https://www.google-analytics.com;">
+
+
+
+
+<meta name="author" content="Zhangwwww">
+<meta name="description" content="1.Android四大组件    1.1 Activity相关    1.Activity生命周期及各个方法作用
+2.Activity启动模式及应用场景
+3.Activity启动另外一个启动Activity生命周期的回调
+1.2 Service相关    1.Service两种启动模式，有什么区别
+1.3 Broadcast相关    1.广播的几种类型
+2.有序广播怎么做到有序的
+1.4 ContentProvider    1.项目中用过ContentProvicer，怎么用
+2.第三方库使用ContentProvider获取Context，ContentProvider的加载
+2.View部分    1.自定义View
+2.View绘制流程
+3.View事件分发机制
+Activty -&gt; Window -&gt; DecorView (dispatchTouchEvent)
+ViewGroup (onInterceptTouchEvent)
+View (onTouchEvent)
+主要方法：dispatchTouchEvent
+4.View滑动冲突
+参考ViewPager2滑动冲突 https://github.com/android/views-widgets-samples/blob/main/ViewPager2/app/src/main/java/androidx/viewpager2/integration/testapp/NestedScrollableHost.kt
+3.其他部分    3.1.Context    具体实现类是ContextImpl，ContextWrapper是包装类，方便使用并拓展ContextImpl的功能。
+Context 抽象类
+ContextImpl 具体实现类
+ContextWrapper 包装类
+ContextThemeWrapper、Service、Application继承ContextWrapper
+Activity 继承 ContextThemeWrapper">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android面试题(初级)"/>
+<meta name="twitter:description" content="1.Android四大组件    1.1 Activity相关    1.Activity生命周期及各个方法作用
+2.Activity启动模式及应用场景
+3.Activity启动另外一个启动Activity生命周期的回调
+1.2 Service相关    1.Service两种启动模式，有什么区别
+1.3 Broadcast相关    1.广播的几种类型
+2.有序广播怎么做到有序的
+1.4 ContentProvider    1.项目中用过ContentProvicer，怎么用
+2.第三方库使用ContentProvider获取Context，ContentProvider的加载
+2.View部分    1.自定义View
+2.View绘制流程
+3.View事件分发机制
+Activty -&gt; Window -&gt; DecorView (dispatchTouchEvent)
+ViewGroup (onInterceptTouchEvent)
+View (onTouchEvent)
+主要方法：dispatchTouchEvent
+4.View滑动冲突
+参考ViewPager2滑动冲突 https://github.com/android/views-widgets-samples/blob/main/ViewPager2/app/src/main/java/androidx/viewpager2/integration/testapp/NestedScrollableHost.kt
+3.其他部分    3.1.Context    具体实现类是ContextImpl，ContextWrapper是包装类，方便使用并拓展ContextImpl的功能。
+Context 抽象类
+ContextImpl 具体实现类
+ContextWrapper 包装类
+ContextThemeWrapper、Service、Application继承ContextWrapper
+Activity 继承 ContextThemeWrapper"/>
+
+<meta property="og:title" content="Android面试题(初级)" />
+<meta property="og:description" content="1.Android四大组件    1.1 Activity相关    1.Activity生命周期及各个方法作用
+2.Activity启动模式及应用场景
+3.Activity启动另外一个启动Activity生命周期的回调
+1.2 Service相关    1.Service两种启动模式，有什么区别
+1.3 Broadcast相关    1.广播的几种类型
+2.有序广播怎么做到有序的
+1.4 ContentProvider    1.项目中用过ContentProvicer，怎么用
+2.第三方库使用ContentProvider获取Context，ContentProvider的加载
+2.View部分    1.自定义View
+2.View绘制流程
+3.View事件分发机制
+Activty -&gt; Window -&gt; DecorView (dispatchTouchEvent)
+ViewGroup (onInterceptTouchEvent)
+View (onTouchEvent)
+主要方法：dispatchTouchEvent
+4.View滑动冲突
+参考ViewPager2滑动冲突 https://github.com/android/views-widgets-samples/blob/main/ViewPager2/app/src/main/java/androidx/viewpager2/integration/testapp/NestedScrollableHost.kt
+3.其他部分    3.1.Context    具体实现类是ContextImpl，ContextWrapper是包装类，方便使用并拓展ContextImpl的功能。
+Context 抽象类
+ContextImpl 具体实现类
+ContextWrapper 包装类
+ContextThemeWrapper、Service、Application继承ContextWrapper
+Activity 继承 ContextThemeWrapper" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangw1998.github.io/posts/android%E9%9D%A2%E8%AF%95%E5%88%9D%E7%BA%A7/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-10-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-10-31T00:00:00+00:00" />
+
+
+
+
+  <title>Zhangwww&#39;s Blog</title>
+
+  
+  <link rel="canonical" href="https://zhangw1998.github.io/posts/android%E9%9D%A2%E8%AF%95%E5%88%9D%E7%BA%A7/">
+  
+
+  <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.6b1a4fbc48955b72aea7913e43fabeb45e8bc120da5aa41b598dd33adcac4b59.css" integrity="sha256-axpPvEiVW3Kup5E&#43;Q/q&#43;tF6LwSDaWqQbWY3TOtysS1k=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+  
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.39e41a7f16bdf8cb16e43cae7d714fa1016f1d2d2898a5b3f27f42c9979204e2.css" integrity="sha256-OeQafxa9&#43;MsW5DyufXFPoQFvHS0omKWz8n9CyZeSBOI=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+   
+
+
+
+
+  <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+  
+
+  <meta name="generator" content="Hugo 0.98.0" />
+
+
+  
+
+</head>
+
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Zhangwww&#39;s Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">博客</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/projects/">项目</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/contact/">联系方式</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://zhangw1998.github.io/posts/android%E9%9D%A2%E8%AF%95%E5%88%9D%E7%BA%A7/">
+              Android面试题(初级)
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2021-10-31T00:00:00Z">
+                October 31, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              阅读时间：5 分钟
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <h2 id="1android四大组件">
+  1.Android四大组件
+  <a class="heading-link" href="#1android%e5%9b%9b%e5%a4%a7%e7%bb%84%e4%bb%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="11-activity相关">
+  1.1 Activity相关
+  <a class="heading-link" href="#11-activity%e7%9b%b8%e5%85%b3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>1.Activity生命周期及各个方法作用</p>
+<p>2.Activity启动模式及应用场景</p>
+<p>3.Activity启动另外一个启动Activity生命周期的回调</p>
+<h3 id="12-service相关">
+  1.2 Service相关
+  <a class="heading-link" href="#12-service%e7%9b%b8%e5%85%b3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>1.Service两种启动模式，有什么区别</p>
+<h3 id="13-broadcast相关">
+  1.3 Broadcast相关
+  <a class="heading-link" href="#13-broadcast%e7%9b%b8%e5%85%b3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>1.广播的几种类型</p>
+<p>2.有序广播怎么做到有序的</p>
+<h3 id="14-contentprovider">
+  1.4 ContentProvider
+  <a class="heading-link" href="#14-contentprovider">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>1.项目中用过ContentProvicer，怎么用</p>
+<p>2.第三方库使用ContentProvider获取Context，ContentProvider的加载</p>
+<h2 id="2view部分">
+  2.View部分
+  <a class="heading-link" href="#2view%e9%83%a8%e5%88%86">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>1.自定义View</p>
+<p>2.View绘制流程</p>
+<p>3.View事件分发机制</p>
+<p>Activty -&gt; Window -&gt; DecorView (dispatchTouchEvent)</p>
+<p>ViewGroup (onInterceptTouchEvent)</p>
+<p>View (onTouchEvent)</p>
+<p>主要方法：dispatchTouchEvent</p>
+<p>4.View滑动冲突</p>
+<p>参考ViewPager2滑动冲突 <a href="https://github.com/android/views-widgets-samples/blob/main/ViewPager2/app/src/main/java/androidx/viewpager2/integration/testapp/NestedScrollableHost.kt">https://github.com/android/views-widgets-samples/blob/main/ViewPager2/app/src/main/java/androidx/viewpager2/integration/testapp/NestedScrollableHost.kt</a></p>
+<h2 id="3其他部分">
+  3.其他部分
+  <a class="heading-link" href="#3%e5%85%b6%e4%bb%96%e9%83%a8%e5%88%86">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="31context">
+  3.1.Context
+  <a class="heading-link" href="#31context">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>具体实现类是ContextImpl，ContextWrapper是包装类，方便使用并拓展ContextImpl的功能。</p>
+<p>Context 抽象类</p>
+<p>ContextImpl 具体实现类</p>
+<p>ContextWrapper 包装类</p>
+<p>ContextThemeWrapper、Service、Application继承ContextWrapper</p>
+<p>Activity 继承 ContextThemeWrapper</p>
+<p>Context个数 = Service 个数 + Activity 个数 + Application 个数</p>
+<p><a href="https://juejin.cn/post/6844903745814265870">https://juejin.cn/post/6844903745814265870</a></p>
+<h3 id="32handler机制">
+  3.2Handler机制
+  <a class="heading-link" href="#32handler%e6%9c%ba%e5%88%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>Looper</li>
+<li>Handler</li>
+<li>MessageQueue</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="font-weight:bold">public</span> <span style="font-weight:bold">final</span> <span style="font-weight:bold">class</span> <span style="font-weight:bold">Looper</span> {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// 主线程不允许退出，参数为false，其他线程是参数是true
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">private</span> <span style="font-weight:bold">static</span> <span style="">void</span> prepare(<span style="">boolean</span> quitAllowed) {
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> (sThreadLocal.get() != <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">throw</span> <span style="font-weight:bold">new</span> RuntimeException(<span style="font-style:italic">&#34;Only one Looper may be created per thread&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        sThreadLocal.set(<span style="font-weight:bold">new</span> Looper(quitAllowed));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// Looper初始化创建MessageQueue，并记录当前Thread
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">private</span> Looper(<span style="">boolean</span> quitAllowed) {
+</span></span><span style="display:flex;"><span>        mQueue = <span style="font-weight:bold">new</span> MessageQueue(quitAllowed);
+</span></span><span style="display:flex;"><span>        mThread = Thread.currentThread();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// 阻塞当前线程，开始从MessageQueue中获取消息并交给Handler进行处理
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">public</span> <span style="font-weight:bold">static</span> <span style="">void</span> loop() {
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">final</span> Looper me = myLooper();
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> (me == <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">throw</span> <span style="font-weight:bold">new</span> RuntimeException(<span style="font-style:italic">&#34;No Looper; Looper.prepare() wasn&#39;t called on this thread.&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">final</span> MessageQueue queue = me.mQueue;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">// 省略其他代码...
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">for</span> (;;) {
+</span></span><span style="display:flex;"><span>            Message msg = queue.next(); <span style="font-style:italic">// might block
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            <span style="font-weight:bold">if</span> (msg == <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>                <span style="font-style:italic">// No message indicates that the message queue is quitting.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                <span style="font-weight:bold">return</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="font-style:italic">// 省略其他代码...
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            <span style="font-weight:bold">try</span> {
+</span></span><span style="display:flex;"><span>                <span style="font-style:italic">// msg.target实际上就是Handler
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                msg.target.dispatchMessage(msg);
+</span></span><span style="display:flex;"><span>            } <span style="font-weight:bold">catch</span> (Exception exception) {
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">throw</span> exception;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            msg.recycleUnchecked();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// 退出循环，
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">public</span> <span style="">void</span> quit() {
+</span></span><span style="display:flex;"><span>        mQueue.quit(<span style="font-weight:bold">false</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// 安全的退出循环，会处理完MessageQueue中的Message
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">public</span> <span style="">void</span> quitSafely() {
+</span></span><span style="display:flex;"><span>        mQueue.quit(<span style="font-weight:bold">true</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>1.主线程的<code>Looper</code>是在<code>ActivityThread</code>中的<code>main</code>方法中调用的，<code>Loop.prepareMainLooper()</code>方法</p>
+<p>2.判断当前线程是否为主线程可以通过 <code>Looper.getMainLooper() == Looper.meLooper()</code></p>
+<p>3.Looper.loop()方法为什么不会产生ANR</p>
+<p>nativeWake()方法和nativePollOnce()方法采用了Linux的epoll机制，其中nativePollOnce()的第二个值，当它是-1时会一直沉睡，直到被主动唤醒为止，当它是0时不会沉睡，当它是大于0的值时会沉睡传入的值那么多的毫秒时间。epoll机制实质上是让CPU沉睡，来保障当前线程一直在运行而不中断或者卡死，这也是Looper.loop()死循环为什么不会导致住县城ANR的根本原因。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="font-weight:bold">public</span> <span style="font-weight:bold">class</span> <span style="font-weight:bold">Handler</span> {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// snedMessage方法和sendMessageDelayed方法都会调用sendMessageAtTime方法，post方法也会调用sendMessage方法
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-style:italic">// 最终会调用enqueueMessage方法
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">private</span> <span style="">boolean</span> enqueueMessage(@NonNull MessageQueue queue, @NonNull Message msg, <span style="">long</span> uptimeMillis) {
+</span></span><span style="display:flex;"><span>        msg.target = <span style="font-weight:bold">this</span>;
+</span></span><span style="display:flex;"><span>        msg.workSourceUid = ThreadLocalWorkSource.getUid();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> (mAsynchronous) {
+</span></span><span style="display:flex;"><span>            msg.setAsynchronous(<span style="font-weight:bold">true</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">return</span> queue.enqueueMessage(msg, uptimeMillis);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// Looper中取到消息后会调用该方法，消费Message
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    <span style="font-weight:bold">public</span> <span style="">void</span> dispatchMessage(@NonNull Message msg) {
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> (msg.callback != <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>            handleCallback(msg);
+</span></span><span style="display:flex;"><span>        } <span style="font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">if</span> (mCallback != <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">if</span> (mCallback.handleMessage(msg)) {
+</span></span><span style="display:flex;"><span>                    <span style="font-weight:bold">return</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            handleMessage(msg);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}   
+</span></span></code></pre></div><p>使用Hanlder可能会产生内存泄漏，内部类持用外部类的引用</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="font-weight:bold">public</span> <span style="font-weight:bold">final</span> <span style="font-weight:bold">class</span> <span style="font-weight:bold">MessageQueue</span> {
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// 省略部分代码
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    Message next() {
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">// Return here if the message loop has already quit and been disposed.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>        <span style="font-style:italic">// This can happen if the application tries to restart a looper after quit
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>        <span style="font-style:italic">// which is not supported.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>        <span style="font-weight:bold">final</span> <span style="">long</span> ptr = mPtr;
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> (ptr == 0) {
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">return</span> <span style="font-weight:bold">null</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="">int</span> pendingIdleHandlerCount = -1; <span style="font-style:italic">// -1 only during first iteration
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>        <span style="">int</span> nextPollTimeoutMillis = 0;
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">for</span> (;;) {
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">if</span> (nextPollTimeoutMillis != 0) {
+</span></span><span style="display:flex;"><span>                Binder.flushPendingCommands();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="font-style:italic">// nextPollTimeoutMillis = -1时会阻塞
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            nativePollOnce(ptr, nextPollTimeoutMillis);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">synchronized</span> (<span style="font-weight:bold">this</span>) {
+</span></span><span style="display:flex;"><span>                <span style="font-style:italic">// Try to retrieve the next message.  Return if found.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                <span style="font-weight:bold">final</span> <span style="">long</span> now = SystemClock.uptimeMillis();
+</span></span><span style="display:flex;"><span>                Message prevMsg = <span style="font-weight:bold">null</span>;
+</span></span><span style="display:flex;"><span>                Message msg = mMessages;
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">if</span> (msg != <span style="font-weight:bold">null</span> &amp;&amp; msg.target == <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>                    <span style="font-style:italic">// Stalled by a barrier.  Find the next asynchronous message in the queue.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                    <span style="font-weight:bold">do</span> {
+</span></span><span style="display:flex;"><span>                        prevMsg = msg;
+</span></span><span style="display:flex;"><span>                        msg = msg.next;
+</span></span><span style="display:flex;"><span>                    } <span style="font-weight:bold">while</span> (msg != <span style="font-weight:bold">null</span> &amp;&amp; !msg.isAsynchronous());
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">if</span> (msg != <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>                    <span style="font-weight:bold">if</span> (now &lt; msg.when) {
+</span></span><span style="display:flex;"><span>                        <span style="font-style:italic">// Next message is not ready.  Set a timeout to wake up when it is ready.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                        nextPollTimeoutMillis = (<span style="">int</span>) Math.min(msg.when - now, Integer.MAX_VALUE);
+</span></span><span style="display:flex;"><span>                    } <span style="font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>                        <span style="font-style:italic">// Got a message.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                        mBlocked = <span style="font-weight:bold">false</span>;
+</span></span><span style="display:flex;"><span>                        <span style="font-weight:bold">if</span> (prevMsg != <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>                            prevMsg.next = msg.next;
+</span></span><span style="display:flex;"><span>                        } <span style="font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>                            mMessages = msg.next;
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                        msg.next = <span style="font-weight:bold">null</span>;
+</span></span><span style="display:flex;"><span>                        <span style="font-weight:bold">if</span> (DEBUG) Log.v(TAG, <span style="font-style:italic">&#34;Returning message: &#34;</span> + msg);
+</span></span><span style="display:flex;"><span>                        msg.markInUse();
+</span></span><span style="display:flex;"><span>                        <span style="font-weight:bold">return</span> msg;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                } <span style="font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>                    <span style="font-style:italic">// No more messages.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                    nextPollTimeoutMillis = -1;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">if</span> (mQuitting) {
+</span></span><span style="display:flex;"><span>                    dispose();
+</span></span><span style="display:flex;"><span>                    <span style="font-weight:bold">return</span> <span style="font-weight:bold">null</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="font-style:italic">// If first time idle, then get the number of idlers to run.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                <span style="font-style:italic">// Idle handles only run if the queue is empty or if the first message
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                <span style="font-style:italic">// in the queue (possibly a barrier) is due to be handled in the future.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                <span style="font-weight:bold">if</span> (pendingIdleHandlerCount &lt; 0
+</span></span><span style="display:flex;"><span>                        &amp;&amp; (mMessages == <span style="font-weight:bold">null</span> || now &lt; mMessages.when)) {
+</span></span><span style="display:flex;"><span>                    pendingIdleHandlerCount = mIdleHandlers.size();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">if</span> (pendingIdleHandlerCount &lt;= 0) {
+</span></span><span style="display:flex;"><span>                    <span style="font-style:italic">// No idle handlers to run.  Loop and wait some more.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                    mBlocked = <span style="font-weight:bold">true</span>;
+</span></span><span style="display:flex;"><span>                    <span style="font-weight:bold">continue</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">if</span> (mPendingIdleHandlers == <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>                    mPendingIdleHandlers = <span style="font-weight:bold">new</span> IdleHandler[Math.max(pendingIdleHandlerCount, 4)];
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                mPendingIdleHandlers = mIdleHandlers.toArray(mPendingIdleHandlers);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="font-style:italic">// Run the idle handlers.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            <span style="font-style:italic">// We only ever reach this code block during the first iteration.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            <span style="font-weight:bold">for</span> (<span style="">int</span> i = 0; i &lt; pendingIdleHandlerCount; i++) {
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">final</span> IdleHandler idler = mPendingIdleHandlers[i];
+</span></span><span style="display:flex;"><span>                mPendingIdleHandlers[i] = <span style="font-weight:bold">null</span>; <span style="font-style:italic">// release the reference to the handler
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>
+</span></span><span style="display:flex;"><span>                <span style="">boolean</span> keep = <span style="font-weight:bold">false</span>;
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">try</span> {
+</span></span><span style="display:flex;"><span>                    keep = idler.queueIdle();
+</span></span><span style="display:flex;"><span>                } <span style="font-weight:bold">catch</span> (Throwable t) {
+</span></span><span style="display:flex;"><span>                    Log.wtf(TAG, <span style="font-style:italic">&#34;IdleHandler threw exception&#34;</span>, t);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">if</span> (!keep) {
+</span></span><span style="display:flex;"><span>                    <span style="font-weight:bold">synchronized</span> (<span style="font-weight:bold">this</span>) {
+</span></span><span style="display:flex;"><span>                        mIdleHandlers.remove(idler);
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="font-style:italic">// Reset the idle handler count to 0 so we do not run them again.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            pendingIdleHandlerCount = 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="font-style:italic">// While calling an idle handler, a new message could have been delivered
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            <span style="font-style:italic">// so go back and look again for a pending message without waiting.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            nextPollTimeoutMillis = 0;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// 主要是把消息放入队列中，然后判断是否需要
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>	<span style="">boolean</span> enqueueMessage(Message msg, <span style="">long</span> when) {
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">if</span> (msg.target == <span style="font-weight:bold">null</span>) {
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">throw</span> <span style="font-weight:bold">new</span> IllegalArgumentException(<span style="font-style:italic">&#34;Message must have a target.&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">synchronized</span> (<span style="font-weight:bold">this</span>) {
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">if</span> (msg.isInUse()) {
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">throw</span> <span style="font-weight:bold">new</span> IllegalStateException(msg + <span style="font-style:italic">&#34; This message is already in use.&#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">if</span> (mQuitting) {
+</span></span><span style="display:flex;"><span>                IllegalStateException e = <span style="font-weight:bold">new</span> IllegalStateException(
+</span></span><span style="display:flex;"><span>                        msg.target + <span style="font-style:italic">&#34; sending message to a Handler on a dead thread&#34;</span>);
+</span></span><span style="display:flex;"><span>                Log.w(TAG, e.getMessage(), e);
+</span></span><span style="display:flex;"><span>                msg.recycle();
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">return</span> <span style="font-weight:bold">false</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            msg.markInUse();
+</span></span><span style="display:flex;"><span>            msg.when = when;
+</span></span><span style="display:flex;"><span>            Message p = mMessages;
+</span></span><span style="display:flex;"><span>            <span style="">boolean</span> needWake;
+</span></span><span style="display:flex;"><span>            <span style="font-weight:bold">if</span> (p == <span style="font-weight:bold">null</span> || when == 0 || when &lt; p.when) {
+</span></span><span style="display:flex;"><span>                <span style="font-style:italic">// New head, wake up the event queue if blocked.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                msg.next = p;
+</span></span><span style="display:flex;"><span>                mMessages = msg;
+</span></span><span style="display:flex;"><span>                needWake = mBlocked;
+</span></span><span style="display:flex;"><span>            } <span style="font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>                <span style="font-style:italic">// Inserted within the middle of the queue.  Usually we don&#39;t have to wake
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                <span style="font-style:italic">// up the event queue unless there is a barrier at the head of the queue
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                <span style="font-style:italic">// and the message is the earliest asynchronous message in the queue.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                needWake = mBlocked &amp;&amp; p.target == <span style="font-weight:bold">null</span> &amp;&amp; msg.isAsynchronous();
+</span></span><span style="display:flex;"><span>                Message prev;
+</span></span><span style="display:flex;"><span>                <span style="font-weight:bold">for</span> (;;) {
+</span></span><span style="display:flex;"><span>                    prev = p;
+</span></span><span style="display:flex;"><span>                    p = p.next;
+</span></span><span style="display:flex;"><span>                    <span style="font-weight:bold">if</span> (p == <span style="font-weight:bold">null</span> || when &lt; p.when) {
+</span></span><span style="display:flex;"><span>                        <span style="font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    <span style="font-weight:bold">if</span> (needWake &amp;&amp; p.isAsynchronous()) {
+</span></span><span style="display:flex;"><span>                        needWake = <span style="font-weight:bold">false</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                msg.next = p; <span style="font-style:italic">// invariant: p == prev.next
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>                prev.next = msg;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="font-style:italic">// We can assume mPtr != 0 because mQuitting is false.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>            <span style="font-weight:bold">if</span> (needWake) {
+</span></span><span style="display:flex;"><span>                nativeWake(mPtr);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="font-weight:bold">return</span> <span style="font-weight:bold">true</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>MessageQueue</code>主要是通过<code>next()</code>方法取消息，在for循环里通过一系列的条件判断，是否能获取到Message对象，然后返回，否则会判断<code>IdleHandler</code>中是否有任务。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Zhangw1998/BlogImages/img/Message.png" alt="MessageQueue.drawio"></p>
+<ul>
+<li>IdleHandler，面试被问到</li>
+</ul>
+<p>详情参考：https://zhuanlan.zhihu.com/p/345819916</p>
+<h3 id="33-app启动流程">
+  3.3 App启动流程
+  <a class="heading-link" href="#33-app%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="34-进程间通信">
+  3.4 进程间通信
+  <a class="heading-link" href="#34-%e8%bf%9b%e7%a8%8b%e9%97%b4%e9%80%9a%e4%bf%a1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h2 id="4java部分">
+  4.Java部分
+  <a class="heading-link" href="#4java%e9%83%a8%e5%88%86">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="41-hashcode">
+  4.1 HashCode
+  <a class="heading-link" href="#41-hashcode">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>
+<p>hashcode的作用</p>
+<ol>
+<li>HashCode的存在主要是为了查找的快捷性，HashCode是用来在散列存储结构中确定对象的存储地址的</li>
+<li>如果两个对象equals相等，那么这两个对象的HashCode一定也相同</li>
+<li>如果对象的equals方法被重写，那么对象的HashCode方法也尽量重写</li>
+<li>如果两个对象的HashCode相同，不代表两个对象就相同，只能说明这两个对象在散列存储结构中，存放于同一个位置</li>
+</ol>
+</li>
+<li>
+<p>重写equals方法</p>
+<ol>
+<li>自反性：A.equals(A)要返回true.</li>
+<li>对称性：如果A.equals(B)返回true, 则B.equals(A)也要返回true.</li>
+<li>传递性：如果A.equals(B)为true, B.equals(C)为true, 则A.equals(C)也要为true. 说白了就是 A = B , B = C , 那么A = C.</li>
+<li>一致性：只要A,B对象的状态没有改变，A.equals(B)必须始终返回true.</li>
+<li>A.equals(null) 要返回false.</li>
+</ol>
+</li>
+</ul>
+<h3 id="42-hashmap">
+  4.2 HashMap
+  <a class="heading-link" href="#42-hashmap">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>内部结构：数组 + 链表 + 红黑树</p>
+<p>扩容机制</p>
+<p>链表 -&gt; 红黑树, 链表长度达到了8</p>
+<p>红黑树 -&gt; 链表, 节点个数为6</p>
+<p>多线程引发的问题</p>
+<h3 id="43-集合框架">
+  4.3 集合框架
+  <a class="heading-link" href="#43-%e9%9b%86%e5%90%88%e6%a1%86%e6%9e%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>List</p>
+<p>Map</p>
+<h3 id="44-线程池">
+  4.4 线程池
+  <a class="heading-link" href="#44-%e7%ba%bf%e7%a8%8b%e6%b1%a0">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>线程池参数</p>
+<p>线程池类型</p>
+<p>使用场景</p>
+<p>线程间同步</p>
+<h3 id="45-设计模式">
+  4.5 设计模式
+  <a class="heading-link" href="#45-%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>单例模式</p>
+<h3 id="45-java内存模型">
+  4.5 Java内存模型
+  <a class="heading-link" href="#45-java%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2022
+     Zhangwwww 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+  
+  <script src="/js/coder.min.617ac1196e51a8e5820c29ea3f349ae87be7db1242a5a91f3afa569275213d0f.js" integrity="sha256-YXrBGW5RqOWCDCnqPzSa6Hvn2xJCpakfOvpWknUhPQ8="></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

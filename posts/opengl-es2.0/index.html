@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com https://cdn.jsdelivr.net/; prefetch-src 'self'; connect-src 'self' https://www.google-analytics.com;">
+
+
+
+
+<meta name="author" content="Zhangwwww">
+<meta name="description" content="Guide to emoji usage in Hugo">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="OpenGLES 2.0 简介"/>
+<meta name="twitter:description" content="Guide to emoji usage in Hugo"/>
+
+<meta property="og:title" content="OpenGLES 2.0 简介" />
+<meta property="og:description" content="Guide to emoji usage in Hugo" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangw1998.github.io/posts/opengl-es2.0/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-10-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-10-01T00:00:00+00:00" />
+
+
+
+
+  <title>Zhangwww&#39;s Blog</title>
+
+  
+  <link rel="canonical" href="https://zhangw1998.github.io/posts/opengl-es2.0/">
+  
+
+  <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.6b1a4fbc48955b72aea7913e43fabeb45e8bc120da5aa41b598dd33adcac4b59.css" integrity="sha256-axpPvEiVW3Kup5E&#43;Q/q&#43;tF6LwSDaWqQbWY3TOtysS1k=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+  
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.39e41a7f16bdf8cb16e43cae7d714fa1016f1d2d2898a5b3f27f42c9979204e2.css" integrity="sha256-OeQafxa9&#43;MsW5DyufXFPoQFvHS0omKWz8n9CyZeSBOI=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+   
+
+
+
+
+  <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+  
+
+  <meta name="generator" content="Hugo 0.98.0" />
+
+
+  
+
+</head>
+
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Zhangwww&#39;s Blog
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">博客</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/projects/">项目</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/contact/">联系方式</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://zhangw1998.github.io/posts/opengl-es2.0/">
+              OpenGLES 2.0 简介
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2021-10-01T00:00:00Z">
+                October 1, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              阅读时间：1 分钟
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/opengl/">OpenGL</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <h1 id="opengles-20">
+  OpenGLES 2.0
+  <a class="heading-link" href="#opengles-20">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="1-基本概念">
+  1. 基本概念
+  <a class="heading-link" href="#1-%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<ul>
+<li>几何图元：包括点、直线、三角形，均是通过顶点（vertex）来指定的</li>
+<li>模型：根据几何图元创建的物体</li>
+<li>渲染：计算机根据模型创建图像的过程</li>
+</ul>
+<h2 id="渲染管线">
+  渲染管线
+  <a class="heading-link" href="#%e6%b8%b2%e6%9f%93%e7%ae%a1%e7%ba%bf">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<ol>
+<li>指定几何对象</li>
+<li>顶点处理</li>
+<li>图元组装</li>
+<li>栅格化操作</li>
+<li>片元处理</li>
+<li>帧缓冲操作</li>
+</ol>
+<p>Vertex Shader(顶点着色器) 用来替代顶点处理阶段
+Fragment Shader(片元着色器) 用来替换片元处理阶段</p>
+<h2 id="顶点着色器vertex-shader">
+  顶点着色器（Vertex Shader）
+  <a class="heading-link" href="#%e9%a1%b6%e7%82%b9%e7%9d%80%e8%89%b2%e5%99%a8vertex-shader">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<ul>
+<li>可操作属性：
+<ul>
+<li>位置</li>
+<li>颜色</li>
+<li>纹理坐标</li>
+</ul>
+</li>
+</ul>
+<h2 id="glsl-语法">
+  GLSL 语法
+  <a class="heading-link" href="#glsl-%e8%af%ad%e6%b3%95">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>（1）GLSL 的修饰符与基本数据类型</p>
+<ul>
+<li>
+<p>修饰符
+const: 用于声明非可写的编译时常量变量
+attribute: 用于经常更改的信息，只能在顶点着色器中使用
+uniform: 用于不经常更改的信息，可用于顶点着色器和片元着色器
+varying: 用于修饰从顶点着色器向片元着色器传递的变量</p>
+</li>
+<li>
+<p>基本数据类型
+int, bool, float
+float 的修饰符，可以指定精度。三种修饰符的范围和应用情况具体如下：</p>
+<ul>
+<li>highp:32bit, 一般用于顶点坐标（vertex Coordinate）</li>
+<li>medium:16bit, 一般用于纹理坐标（texure Coordinate）</li>
+<li>lowp:8bit, 一般用于颜色显示（color）</li>
+</ul>
+</li>
+<li>
+<p>向量类型：vec4</p>
+</li>
+<li>
+<p>矩阵类型：mat4 (表示4x4的浮点矩阵)</p>
+</li>
+<li>
+<p>纹理类型：sample2D（一般仅在Fragment Shader中使用）</p>
+</li>
+</ul>
+<p>（2）内置变量</p>
+<ul>
+<li>Vertex Shader:
+位置：vec4 gl_position;
+大小：float gl_pointSize;</li>
+<li>Fragment Shader:
+颜色：vec4 gl_FragColor;</li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2022
+     Zhangwwww 
+    ·
+    
+    技术支持 <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+  
+  <script src="/js/coder.min.617ac1196e51a8e5820c29ea3f349ae87be7db1242a5a91f3afa569275213d0f.js" integrity="sha256-YXrBGW5RqOWCDCnqPzSa6Hvn2xJCpakfOvpWknUhPQ8="></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

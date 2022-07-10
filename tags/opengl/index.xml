@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OpenGL on Zhangwww&#39;s Blog</title>
+    <link>https://zhangw1998.github.io/tags/opengl/</link>
+    <description>Recent content in OpenGL on Zhangwww&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 04 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://zhangw1998.github.io/tags/opengl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenGLES 2.0 学习笔记(3)</title>
+      <link>https://zhangw1998.github.io/posts/opengles_android_3/</link>
+      <pubDate>Mon, 04 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://zhangw1998.github.io/posts/opengles_android_3/</guid>
+      <description>OpenGLES(Android)学习笔记3    1.归一化坐标    2.矩阵    2.1 单位矩阵    $$ \left[ \begin{matrix} 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 \ \end{matrix} \right] $$
+2.2 平移矩阵    $$ \left[ \begin{matrix} 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; x_{translation} \ 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; y_{translation} \ 0 &amp;amp; 0 &amp;amp; 1 &amp;amp; z_{translation} \ 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 \ \end{matrix} \right] $$</description>
+    </item>
+    
+    <item>
+      <title>OpenGLES 2.0 学习笔记(2)</title>
+      <link>https://zhangw1998.github.io/posts/opengles_android_2/</link>
+      <pubDate>Sun, 03 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://zhangw1998.github.io/posts/opengles_android_2/</guid>
+      <description>OpenGL ES学习笔记(2)    1.基本概念    1.1 顶点(Vertex)     一个顶点就是代表几何图形的拐点，这个点有很多属性，最重要属性的是位置  // 定义顶点用数组保存，这个数组通常称为顶点属性数组 val vertices = floatArrayOf(  //Triangle  -0.5f, -0.5f,  0.5f, 0.5f,  -0.5f, 0.5f,  // Line  -0.5f, 0f,  0.5f, 0f,  // Point  0f, 0.25f )  在OpenGL ES中只能绘制点、直线和三角形 定义三角形的顶点的时候，是逆时针的顺序排列顶点，称为卷曲顺序  1.2 片段(Fragment)     一个片段是一个小的、单一颜色的长方形区域，类似计算机屏幕上的一个像素 OpenGL通过“光栅化”的过程把每个点、直线及三角形分解成大量的的小片段  1.3 OpenGL管道      顶点着色器(vertex shader) 针对每个顶点执行一次</description>
+    </item>
+    
+    <item>
+      <title>OpenGLES 2.0 学习笔记(1)</title>
+      <link>https://zhangw1998.github.io/posts/opengles_android_1/</link>
+      <pubDate>Sat, 02 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://zhangw1998.github.io/posts/opengles_android_1/</guid>
+      <description>OpenGLES学习笔记(1)    1. 入门     在Android中使用OpenGL ES需要使用到GLSurfaceView和Renderer
+ 1.1 GLSurfaceView    // 设置OpenGLES版本 gl_surfaceView.setEGLContextClientVersion(2) // 设置渲染器 gl_surfaceView.setRenderer(AirHockeyRender()) // 设置渲染模式 (RENDERMODE_CONTINUOUSLY | RENDERMODE_WHEN_DIRTY) // RENDERMODE_CONTINUOUSLY 表示自动渲染(默认) // RENDERMODE_WHEN_DIRTY 表示手动渲染，需要调用 GLSurfaceView.requestRender()方法渲染 gl_surfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY  // 注：gl_surfaceView是布局文件中GLSurfaceView的id GLSurfaceView的渲染在OpenGL线程中，如果需要相互通信可以使用如下的方法
+ 通信方式  UI线程 -&amp;gt; OpenGL线程：GLSurfaceView.queueEvent() OpenGL线程 -&amp;gt; UI线程：runOnUiThread()    1.2 Renderer    class OpenGLRender : GLSurfaceView.Renderer{   override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?</description>
+    </item>
+    
+    <item>
+      <title>OpenGLES 2.0 简介</title>
+      <link>https://zhangw1998.github.io/posts/opengl-es2.0/</link>
+      <pubDate>Fri, 01 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://zhangw1998.github.io/posts/opengl-es2.0/</guid>
+      <description>OpenGLES 2.0    1. 基本概念     几何图元：包括点、直线、三角形，均是通过顶点（vertex）来指定的 模型：根据几何图元创建的物体 渲染：计算机根据模型创建图像的过程  渲染管线     指定几何对象 顶点处理 图元组装 栅格化操作 片元处理 帧缓冲操作  Vertex Shader(顶点着色器) 用来替代顶点处理阶段 Fragment Shader(片元着色器) 用来替换片元处理阶段
+顶点着色器（Vertex Shader）     可操作属性：  位置 颜色 纹理坐标    GLSL 语法    （1）GLSL 的修饰符与基本数据类型
+  修饰符 const: 用于声明非可写的编译时常量变量 attribute: 用于经常更改的信息，只能在顶点着色器中使用 uniform: 用于不经常更改的信息，可用于顶点着色器和片元着色器 varying: 用于修饰从顶点着色器向片元着色器传递的变量
+  基本数据类型 int, bool, float float 的修饰符，可以指定精度。三种修饰符的范围和应用情况具体如下：</description>
+    </item>
+    
+  </channel>
+</rss>
